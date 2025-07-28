@@ -1,4 +1,5 @@
 import { ModeToggle } from "@/components/theme/mode-toggle-button";
+import { initialProfile } from "@/lib/data/initial-profile";
 import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 
