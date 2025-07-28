@@ -17,13 +17,13 @@ import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   name: z.string().min(3, {
@@ -35,6 +35,13 @@ const formSchema = z.object({
 });
 
 export const CreateServerModal = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(()=> {
+    setIsMounted(true);
+  }, [])
+
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,6 +55,8 @@ export const CreateServerModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
   };
+
+  if(!isMounted) return null;
 
   return (
     <div className="p-48">
@@ -85,12 +94,13 @@ export const CreateServerModal = () => {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
               <DialogFooter>
-                <Button type="submit">Confirm</Button>
+                <Button type="submit">Create</Button>
               </DialogFooter>
             </form>
           </Form>
