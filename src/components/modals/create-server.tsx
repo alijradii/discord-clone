@@ -73,8 +73,8 @@ export const CreateServerModal = () => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="flex items-center jutsify-center text-center">
-                Image Upload
+              <div className="flex items-center jutsify-center text-center uppercase text-xs font-bold text-slate-600 dark:text-slate-400/70">
+                Image Upload (problem for future ali)
               </div>
 
               <FormField
