@@ -11,8 +11,8 @@ import {
   DialogTitle,
   DialogFooter,
   DialogHeader,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 import {
   Form,
@@ -22,8 +22,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
+import { FileUpload } from "@/components/file-upload";
 
 const formSchema = z.object({
   name: z.string().min(3, {
@@ -37,10 +38,9 @@ const formSchema = z.object({
 export const CreateServerModal = () => {
   const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(()=> {
+  useEffect(() => {
     setIsMounted(true);
-  }, [])
-
+  }, []);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -56,7 +56,7 @@ export const CreateServerModal = () => {
     console.log(values);
   };
 
-  if(!isMounted) return null;
+  if (!isMounted) return null;
 
   return (
     <div className="p-48">
@@ -73,8 +73,26 @@ export const CreateServerModal = () => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="flex items-center jutsify-center text-center uppercase text-xs font-bold text-slate-600 dark:text-slate-400/70">
-                Image Upload (problem for future ali)
+              <div className="flex w-full items-center justify-center ">
+                {/* Image Upload (problem for future ali) */}
+
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <div className="">
+                          <FileUpload
+                            endpoint="serverImage"
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <FormField
