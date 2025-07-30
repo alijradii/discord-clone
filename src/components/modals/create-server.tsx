@@ -4,6 +4,8 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import axios from "axios";
+
 import {
   Dialog,
   DialogContent,
@@ -25,6 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { FileUpload } from "@/components/file-upload";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(3, {
@@ -37,6 +40,8 @@ const formSchema = z.object({
 
 export const CreateServerModal = () => {
   const [isMounted, setIsMounted] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     setIsMounted(true);
@@ -53,7 +58,15 @@ export const CreateServerModal = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      await axios.post("/api/servers", values);
+
+      form.reset();
+      router.refresh();
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   if (!isMounted) return null;
@@ -73,22 +86,18 @@ export const CreateServerModal = () => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="flex w-full items-center justify-center ">
-                {/* Image Upload (problem for future ali) */}
-
+              <div className="flex w-full items-center justify-center">
                 <FormField
                   control={form.control}
                   name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <div className="">
-                          <FileUpload
-                            endpoint="serverImage"
-                            value={field.value}
-                            onChange={field.onChange}
-                          />
-                        </div>
+                        <FileUpload
+                          endpoint="serverImage"
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -103,11 +112,9 @@ export const CreateServerModal = () => {
                     <FormLabel className="uppercase text-xs font-bold text-slate-600 dark:text-slate-400/70">
                       Server Name
                     </FormLabel>
-
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        className=""
                         placeholder="Enter server name"
                         {...field}
                       />
@@ -118,7 +125,9 @@ export const CreateServerModal = () => {
               />
 
               <DialogFooter>
-                <Button type="submit">Create</Button>
+                <Button type="submit" disabled={isLoading}>
+                  Create
+                </Button>
               </DialogFooter>
             </form>
           </Form>
