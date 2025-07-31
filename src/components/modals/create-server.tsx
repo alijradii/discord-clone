@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { FileUpload } from "@/components/file-upload";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
   name: z.string().min(3, {
@@ -38,7 +39,17 @@ const formSchema = z.object({
   }),
 });
 
-export const CreateServerModal = () => {
+interface CreateServerModalProps {
+  isInitial?: boolean;
+}
+
+export const CreateServerModal = ({
+  isInitial = false,
+}: CreateServerModalProps) => {
+  const { isOpen, onClose, type } = useModal();
+
+  const isModalOpen = isOpen && type === "createServer";
+
   const [isMounted, setIsMounted] = useState(false);
 
   const router = useRouter();
@@ -63,7 +74,10 @@ export const CreateServerModal = () => {
 
       form.reset();
       router.refresh();
-      window.location.reload();
+
+      if (isInitial) window.location.reload();
+
+      handleClose();
     } catch (err) {
       console.log(err);
     }
@@ -71,9 +85,19 @@ export const CreateServerModal = () => {
 
   if (!isMounted) return null;
 
+  const handleClose = () => {
+    if (isInitial) return;
+
+    form.reset();
+    onClose();
+  };
+
   return (
     <div className="p-48">
-      <Dialog open>
+      <Dialog
+        open={isInitial || isModalOpen}
+        onOpenChange={() => handleClose()}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create a Server</DialogTitle>
