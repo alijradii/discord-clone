@@ -13,7 +13,7 @@ export const NavigationItem = ({ server }: { server: Server }) => {
   return (
     <ActionTooltip label={server.name} side="right">
       <button
-        className="group relative flex items-center"
+        className="group relative flex items-center mb-3"
         onClick={() => router.push(`/servers/${server.id}`)}
       >
         <div
