@@ -93,7 +93,7 @@ export const CreateServerModal = ({
   };
 
   return (
-    <div className="p-48">
+    <div className="p-48 fixed">
       <Dialog
         open={isInitial || isModalOpen}
         onOpenChange={() => handleClose()}

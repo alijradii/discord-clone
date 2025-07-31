@@ -38,7 +38,8 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ModalProvider />
-            {children}
+
+            <div className="w-screen h-screen">{children}</div>
           </ThemeProvider>
         </body>
       </html>
